@@ -1,0 +1,17 @@
+'#load packages
+library(foreign)
+library(lavaan)
+library(tidySEM)
+studydata = read.spss("C:/Users/lollo/Desktop/manusscript with MI for R.sav", to.data.frame = TRUE)
+clpm <- '
+#paths
+MI2 ~ SUS1
+MI3 ~ SUS2
+PE2 ~ SUS1
+PE3 ~ SUS2
+'
+model_fit <- sem(data = studydata, model = clpm, estimator = "MLR", fixed.x = FALSE)
+summary(model_fit, fit.measures = TRUE, standardized = TRUE)
+#visualize model
+path_layout <- get_layout("MI1", "MI2", "MI3", "SUS1", "SUS2", "SUS3", "PE1", "PE2", "PE3", rows = 3)
+graph_sem(model = model_fit, layout = path_layout)
