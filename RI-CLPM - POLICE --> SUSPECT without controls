@@ -1,0 +1,21 @@
+'#load packages
+library(foreign)
+library(lavaan)
+library(tidySEM)
+studydata = read.spss("C:/Users/lollo/Desktop/manusscript with MI for R.sav", to.data.frame = TRUE)
+riclpm <- '
+#paths
+SUS2 ~ MI1
+SUS3 ~ MI2
+SUS2 ~ PE1 
+SUS3 ~ PE2
+#create random intercepts
+RImi =~ 1*MI1 + 1*MI2 + 1*MI3
+RIsus =~ 1*SUS1 + 1*SUS2 + 1*SUS3
+RIpe =~ 1*PE1 + 1*PE2 + 1*PE3
+'
+model_fit <- sem(data = studydata, model = riclpm, estimator = "MLR", fixed.x = FALSE)
+summary(model_fit, fit.measures = TRUE, standardized = TRUE)
+#visualize model
+path_layout <- get_layout("MI1", "MI2", "MI3", "SUS1", "SUS2", "SUS3", "PE1", "PE2", "PE3", rows = 3)
+graph_sem(model = model_fit, layout = path_layout)
